@@ -1,0 +1,519 @@
+/* メトロノームアプリのスタイル */
+:root {
+    --primary-color: #4a6da7;
+    --accent-color: #ff6b6b;
+    --background-color: #f5f5f5;
+    --text-color: #333;
+    --modal-background: #fff;
+    --button-hover: #e0e0e0;
+    --button-active: #d0d0d0;
+    --border-color: #ddd;
+}
+
+/* ダークモード */
+.dark-mode {
+    --primary-color: #5d8bd6;
+    --accent-color: #ff8383;
+    --background-color: #222;
+    --text-color: #eee;
+    --modal-background: #333;
+    --button-hover: #444;
+    --button-active: #555;
+    --border-color: #444;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.metronome-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    padding: 30px;
+    background-color: var(--modal-background);
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.bpm-display {
+    font-size: 5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    transition: transform 0.1s, color 0.1s;
+}
+
+.bpm-display.accent {
+    color: var(--accent-color);
+    transform: scale(1.05);
+}
+
+.visual-feedback {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    opacity: 0.2;
+    margin-bottom: 20px;
+    transition: opacity 0.1s, background-color 0.1s;
+}
+
+.visual-feedback.active {
+    opacity: 1;
+}
+
+.visual-feedback.accent {
+    background-color: var(--accent-color);
+}
+
+.play-button {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+.play-button:hover {
+    background-color: #3a5d97;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.control-button {
+    padding: 10px 15px;
+    background-color: var(--modal-background);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    flex: 1;
+    min-width: 100px;
+    text-align: center;
+}
+
+.control-button:hover {
+    background-color: var(--button-hover);
+}
+
+/* マスコット部分 */
+.mascot-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    max-width: 300px;
+}
+
+.speech-bubble {
+    position: relative;
+    background-color: var(--modal-background);
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    text-align: center;
+}
+
+.speech-bubble:after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 15px 15px 0;
+    border-style: solid;
+    border-color: var(--modal-background) transparent transparent transparent;
+}
+
+.mascot-image img {
+    width: 200px;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* モーダルウィンドウ */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: var(--modal-background);
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* BPM設定モーダル */
+.bpm-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.bpm-button {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#bpm-input {
+    width: 80px;
+    height: 40px;
+    font-size: 1.2rem;
+    text-align: center;
+    margin: 0 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--modal-background);
+    color: var(--text-color);
+}
+
+#bpm-slider {
+    width: 100%;
+    margin: 20px 0;
+}
+
+.tap-tempo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#tap-tempo-button {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+#tap-tempo-info {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+/* 音符設定モーダル */
+.note-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.note-option {
+    display: flex;
+    align-items: center;
+}
+
+.note-option input[type="radio"] {
+    margin-right: 10px;
+}
+
+.accent-option {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.accent-option input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+/* 拍子設定モーダル */
+.time-signature-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+    font-size: 2rem;
+}
+
+.time-signature-controls select {
+    width: 60px;
+    height: 40px;
+    font-size: 1.2rem;
+    text-align: center;
+    margin: 0 5px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--modal-background);
+    color: var(--text-color);
+}
+
+/* タイマー設定モーダル */
+.timer-controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.timer-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.timer-unit label {
+    margin-bottom: 10px;
+}
+
+.timer-button {
+    width: 30px;
+    height: 30px;
+    font-size: 1.2rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.timer-unit input {
+    width: 60px;
+    height: 40px;
+    font-size: 1.2rem;
+    text-align: center;
+    margin: 10px 0;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--modal-background);
+    color: var(--text-color);
+}
+
+/* 追加ボタン */
+.additional-controls {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.additional-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* 設定モーダル */
+.settings-section {
+    margin: 20px 0;
+}
+
+.settings-section h3 {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+#sound-select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--modal-background);
+    color: var(--text-color);
+}
+
+#volume-slider {
+    width: 100%;
+    margin: 10px 0;
+}
+
+#theme-toggle {
+    padding: 8px 15px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* プリセットモーダル */
+.preset-slots {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.preset-slot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+}
+
+.preset-button {
+    padding: 8px 15px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    flex: 1;
+}
+
+.preset-info {
+    width: 100%;
+    margin-top: 5px;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+/* プログレッシブテンポモーダル */
+.progressive-tempo-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.tempo-range {
+    display: flex;
+    align-items: center;
+}
+
+.tempo-range label {
+    width: 120px;
+}
+
+.tempo-range input {
+    width: 80px;
+    height: 35px;
+    font-size: 1rem;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--modal-background);
+    color: var(--text-color);
+}
+
+#start-progressive {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    align-self: center;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+    .bpm-display {
+        font-size: 4rem;
+    }
+    
+    .controls {
+        flex-direction: column;
+    }
+    
+    .note-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .timer-controls {
+        flex-direction: column;
+    }
+    
+    .modal-content {
+        margin: 15% auto;
+        width: 95%;
+    }
+}
+
+@media (max-width: 480px) {
+    .bpm-display {
+        font-size: 3rem;
+    }
+    
+    .play-button {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .mascot-image img {
+        width: 150px;
+    }
+}
